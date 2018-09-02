@@ -1,3 +1,46 @@
 <resources>
+    <!-- preferences text -->
     <string name="app_name">Phone to web forwarder</string>
+    <string name="connection_header">Connection settings</string>
+    <string name="token_title">Access token</string>
+    <string name="endpoint_title">API endpoint address</string>
+    <string name="filter_header">Filter settings</string>
+    <string name="filter_toggle">Filtering</string>
+    <string name="filter_type">Filter type</string>
+    <string name="filter_list">Filter list</string>
+    <string name="filter_list_entry_number">Entries: </string>
+    <string name="forward_header">Forwarding settings</string>
+    <string name="sms_forward_toggle">SMS</string>
+    <string name="sms_template">SMS template</string>
+    <string name="call_forward_toggle">Missed calls</string>
+    <string name="call_template">Call template</string>
+    <string name="about_header">About</string>
+    <string name="app_desc">by bnfour, September 2018</string>
+    <string name="oss_title">Open-source! (MIT)</string>
+    <string name="oss_desc">Code lives at GitHub</string>
+    <!-- additional filter text, copied from sms forwarder -->
+    <string-array name="filter_types">
+        <item>Blacklist</item>
+        <item>Whitelist</item>
+    </string-array>
+    <string-array name="filter_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string name="filter_type_summary_black">Blacklist</string>
+    <string name="filter_type_summary_white">Whitelist</string>
+    <!-- filter list editor strings, also copied -->
+    <string name="add_to_list">Add sender</string>
+    <string name="remove_from_list">Delete</string>
+    <string name="format_hint">Please use international format for phone numbers whenever possible.</string>
+    <string name="clear_all">Clear list</string>
+
+    <string name="edit_entry">Edit entry</string>
+    <string name="new_entry">New entry</string>
+
+    <string name="confirm_title">Please confirm deletion</string>
+    <string name="confirm_text">Are you sure you want to remove all entries from this list? This cannot be undone.</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

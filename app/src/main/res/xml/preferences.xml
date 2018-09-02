@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/connection_header">
+        <EditTextPreference
+            android:key="api_endpoint_url"
+            android:title="@string/endpoint_title"/>
+        <EditTextPreference
+            android:key="api_token"
+            android:title="@string/token_title"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/filter_header">
+        <SwitchPreference
+            android:key="filter_enabled"
+            android:title="@string/filter_toggle"/>
+        <ListPreference
+            android:key="filter_type"
+            android:title="@string/filter_type"
+            android:entries="@array/filter_types"
+            android:entryValues="@array/filter_values"
+            android:defaultValue="0"
+            android:dependency="filter_enabled"/>
+        <Preference
+            android:key="filter_list"
+            android:title="@string/filter_list"
+            android:dependency="filter_enabled">
+            <!-- TODO intent -->
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/forward_header">
+        <SwitchPreference
+            android:key="sms_enabled"
+            android:title="@string/sms_forward_toggle"/>
+        <EditTextPreference
+            android:key="sms_template"
+            android:title="@string/sms_template"
+            android:dependency="sms_enabled"/>
+        <SwitchPreference
+            android:key="calls_enabled"
+            android:title="@string/call_forward_toggle"/>
+        <EditTextPreference
+            android:key="calls_template"
+            android:title="@string/call_template"
+            android:dependency="calls_enabled"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/about_header">
+        <Preference
+            android:title="@string/app_name"
+            android:summary="@string/app_desc"/>
+        <Preference
+            android:title="@string/oss_title"
+            android:summary="@string/oss_desc">
+            <!-- TODO intent -->
+        </Preference>
+        <!-- TODO icon credits after actual icon -->
+    </PreferenceCategory>
+</PreferenceScreen>
