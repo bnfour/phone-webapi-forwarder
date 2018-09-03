@@ -25,7 +25,10 @@
             android:key="filter_list"
             android:title="@string/filter_list"
             android:dependency="filter_enabled">
-            <!-- TODO intent -->
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="net.bnfour.phone2web2tg_forwarder"
+                android:targetClass="net.bnfour.phone2web2tg_forwarder.ListEditActivity"/>
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory
