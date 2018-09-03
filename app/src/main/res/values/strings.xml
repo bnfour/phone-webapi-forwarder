@@ -18,6 +18,7 @@
     <string name="app_desc">by bnfour, September 2018</string>
     <string name="oss_title">Open-source! (MIT)</string>
     <string name="oss_desc">Code lives at GitHub</string>
+    <string name="connection_not_set">Not set! Notifications unavailable.</string>
     <!-- additional filter text, copied from sms forwarder -->
     <string-array name="filter_types">
         <item>Blacklist</item>
