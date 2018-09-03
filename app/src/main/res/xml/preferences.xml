@@ -39,6 +39,8 @@
         <EditTextPreference
             android:key="sms_template"
             android:title="@string/sms_template"
+            android:summary="@string/sms_template_hint"
+            android:defaultValue="@string/sms_template_default"
             android:dependency="sms_enabled"/>
         <SwitchPreference
             android:key="calls_enabled"
@@ -46,6 +48,8 @@
         <EditTextPreference
             android:key="calls_template"
             android:title="@string/call_template"
+            android:summary="@string/calls_template_hint"
+            android:defaultValue="@string/calls_template_default"
             android:dependency="calls_enabled"/>
     </PreferenceCategory>
     <PreferenceCategory

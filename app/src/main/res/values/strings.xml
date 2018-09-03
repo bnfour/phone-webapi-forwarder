@@ -20,6 +20,10 @@
     <string name="oss_desc">Code lives at GitHub</string>
     <string name="connection_not_set">Not set! Notifications unavailable.</string>
     <string name="bad_token">This is not a valid token. Please re-check.</string>
+    <string name="sms_template_hint">%s for sender, %t for message text</string>
+    <string name="calls_template_hint">%c for caller ID</string>
+    <string name="sms_template_default">%s:\n%t</string>
+    <string name="calls_template_default">Missed call from %c</string>
     <!-- additional filter text, copied from sms forwarder -->
     <string-array name="filter_types">
         <item>Blacklist</item>
