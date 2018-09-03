@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -16,12 +18,29 @@ public class SettingsFragment extends PreferenceFragment
             Arrays.asList("filter_enabled", "sms_enabled", "calls_enabled")
     );
 
+    private static Pattern _tokenRegex = Pattern.compile("[0-9a-zA-Z+=]{16}");
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences);
         updateAll();
+
+        // checks token against regex and warns user if it's not a token
+        Preference tokenPreference = findPreference("api_token");
+        tokenPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                if (!_tokenRegex.matcher(o.toString()).matches()) {
+                    Toast.makeText(getActivity(), getString(R.string.bad_token), Toast.LENGTH_SHORT)
+                            .show();
+                }
+                // store it anyway so user can edit it
+                return true;
+            }
+        });
+
     }
 
     @Override
