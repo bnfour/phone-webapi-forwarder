@@ -18,11 +18,11 @@ public class SettingsFragment extends PreferenceFragment
             Arrays.asList("filter_enabled", "sms_enabled", "calls_enabled")
     );
 
-    private static Pattern _tokenRegex = Pattern.compile("[0-9a-zA-Z+=]{16}");
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Pattern _tokenRegex = Pattern.compile(getString(R.string.token_regex));
 
         addPreferencesFromResource(R.xml.preferences);
         updateAll();

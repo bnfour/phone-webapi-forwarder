@@ -24,6 +24,7 @@
     <string name="calls_template_hint">%c for caller ID</string>
     <string name="sms_template_default">%s:\n%t</string>
     <string name="calls_template_default">Missed call from %c</string>
+    <string name="token_regex">[0-9a-zA-Z+=]{16}</string>
     <!-- additional filter text, copied from sms forwarder -->
     <string-array name="filter_types">
         <item>Blacklist</item>

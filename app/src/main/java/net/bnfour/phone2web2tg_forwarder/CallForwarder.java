@@ -28,21 +28,19 @@ public class CallForwarder extends BroadcastReceiver implements Callback<Respons
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
-            SharedPreferences preferences
-                    = getDefaultSharedPreferences(context.getApplicationContext());
-            // TODO move checks from here and SMSForwarder to helper class to reuse code
+
+            Context appContext = context.getApplicationContext();
+
+            SharedPreferences preferences = getDefaultSharedPreferences(appContext);
+
             boolean enabled = preferences.getBoolean("calls_enabled", false);
-            if (!enabled) {
-                return;
-            }
-
             String endpoint = preferences.getString("api_endpoint_url", "");
-            if (endpoint.equals("")) {
-                return;
-            }
-
             String token = preferences.getString("api_token", "");
-            if (token.equals("")) {  // TODO also regex check, move regex to resources
+
+            PreferenceCheckHelper checker = new PreferenceCheckHelper(appContext);
+
+            if (!enabled || !checker.isTokenValid(token) || !checker.isEndpointValid(endpoint)) {
+                // TODO notifications on invalid connection settings?
                 return;
             }
 

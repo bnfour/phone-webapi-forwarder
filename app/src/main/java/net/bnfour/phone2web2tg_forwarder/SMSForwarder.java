@@ -32,21 +32,19 @@ public class SMSForwarder extends BroadcastReceiver implements Callback<Response
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
-            SharedPreferences preferences
-                    = getDefaultSharedPreferences(context.getApplicationContext());
+
+            Context appContext = context.getApplicationContext();
+
+            SharedPreferences preferences = getDefaultSharedPreferences(appContext);
 
             boolean enabled = preferences.getBoolean("sms_enabled", false);
-            if (!enabled) {
-                return;
-            }
-
             String endpoint = preferences.getString("api_endpoint_url", "");
-            if (endpoint.equals("")) {
-                return;
-            }
-
             String token = preferences.getString("api_token", "");
-            if (token.equals("")) {  // TODO also regex check, move regex to resources
+
+            PreferenceCheckHelper checker = new PreferenceCheckHelper(appContext);
+
+            if (!enabled || !checker.isTokenValid(token) || !checker.isEndpointValid(endpoint)) {
+                // TODO notifications on invalid connection settings?
                 return;
             }
 
