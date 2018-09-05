@@ -8,26 +8,16 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsMessage;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 // this is hell of a mess
 // but hey -- at least i got this working
-// TODO make this pretty and add notifications
 
-public class SMSForwarder extends BroadcastReceiver implements Callback<Response> {
+public class SMSForwarder extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -108,52 +98,10 @@ public class SMSForwarder extends BroadcastReceiver implements Callback<Response
                     String template = preferences.getString("sms_template", "%s: %t");
                     String toSend = template.replace("%s", sender).replace("%t", message);
 
-                    send(endpoint, token, toSend);
+                    new WebApiSender(endpoint, token).send(toSend);
 
                 }
             }
         }
-    }
-
-    private void send(String endpoint, String token, String message) {
-        Request request = new Request(token, message);
-
-        // Retrofit stuff
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(endpoint)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        IDontnetTelegramForwarderApi api
-                = retrofit.create(IDontnetTelegramForwarderApi.class);
-
-        Call<Response> call = api.sendRequest(request);
-        call.enqueue(this);
-    }
-
-    @Override
-    public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-        if (response.isSuccessful()) {
-            Response result = response.body();
-            if (!result.ok) {
-                // TODO retrying, notification
-                Log.d("result", "not ok");
-            } else {
-                Log.d("result", "ok");
-            }
-        } else {
-            // TODO notification about failure
-            try {
-                Log.d("result", "not success " + response.errorBody().string());
-            } catch (Exception ex) {}
-        }
-    }
-
-    @Override
-    public void onFailure(Call<Response> call, Throwable t) {
-        // TODO notification
-        Log.d("rip", t.toString());
     }
 }

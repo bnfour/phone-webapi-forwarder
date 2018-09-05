@@ -10,17 +10,9 @@ import android.provider.CallLog;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-public class CallForwarder extends BroadcastReceiver implements Callback<Response> {
+public class CallForwarder extends BroadcastReceiver{
 
     static boolean callRinging = false;
     static boolean callReceived = false;
@@ -77,7 +69,8 @@ public class CallForwarder extends BroadcastReceiver implements Callback<Respons
                             String template = preferences.getString("calls_template",
                                     "Missed call from %c");
                             String toSend = template.replace("%c", number);
-                            send(endpoint, token, toSend);
+
+                            new WebApiSender(endpoint, token).send(toSend);
                         }
                     }
                     // reset the flags anyway
@@ -106,49 +99,5 @@ public class CallForwarder extends BroadcastReceiver implements Callback<Respons
             return false;
         }
         return false;
-    }
-
-    // TODO move these both from here and from SMSForwarder to another class
-
-    private void send(String endpoint, String token, String message) {
-        Request request = new Request(token, message);
-
-        // Retrofit stuff
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(endpoint)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        IDontnetTelegramForwarderApi api
-                = retrofit.create(IDontnetTelegramForwarderApi.class);
-
-        Call<Response> call = api.sendRequest(request);
-        call.enqueue(this);
-    }
-
-    @Override
-    public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-        if (response.isSuccessful()) {
-            Response result = response.body();
-            if (!result.ok) {
-                // TODO retrying, notification
-                Log.d("result", "not ok");
-            } else {
-                Log.d("result", "ok");
-            }
-        } else {
-            // TODO notification about failure
-            try {
-                Log.d("result", "not success " + response.errorBody().string());
-            } catch (Exception ex) {}
-        }
-    }
-
-    @Override
-    public void onFailure(Call<Response> call, Throwable t) {
-        // TODO notification
-        Log.d("rip", t.toString());
     }
 }
