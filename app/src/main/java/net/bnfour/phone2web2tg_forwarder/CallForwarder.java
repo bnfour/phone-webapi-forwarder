@@ -16,11 +16,11 @@ public class CallForwarder extends BroadcastReceiver{
 
     static boolean callRinging = false;
     static boolean callReceived = false;
+    static String number = null;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
-
             Context appContext = context.getApplicationContext();
 
             SharedPreferences preferences = getDefaultSharedPreferences(appContext);
@@ -35,14 +35,13 @@ public class CallForwarder extends BroadcastReceiver{
                 // TODO notifications on invalid connection settings?
                 return;
             }
-
             Bundle bundle = intent.getExtras();
-            if (bundle.containsKey(TelephonyManager.EXTRA_INCOMING_NUMBER)
-                    && bundle.containsKey(TelephonyManager.EXTRA_STATE)) {
+            if (bundle.containsKey(TelephonyManager.EXTRA_STATE)) {
                 String state = bundle.getString(TelephonyManager.EXTRA_STATE);
                 // switch requires "constant values", apparently final strings are not worthy
                 // we've got a call
                 if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
+                    number = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
                     callRinging = true;
                 // the call was answered
                 } else if (state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
@@ -54,7 +53,7 @@ public class CallForwarder extends BroadcastReceiver{
                         // it might be a dismissed call
                         // to know for sure, we need to check call log --
                         // if last call is 'missed' that should be the call that was tracked here
-
+                        // TODO filtering
                         // slight delay to make sure call log catches up
                         try {
                             Thread.sleep(5000);
@@ -63,8 +62,6 @@ public class CallForwarder extends BroadcastReceiver{
                             // what a terrible failure!
                             Log.wtf("error", "we died :(");
                         }
-
-                        String number = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
                         if (isLastCallMissedFrom(number, context)) {
                             String template = preferences.getString("calls_template",
                                     "Missed call from %c");
@@ -73,9 +70,10 @@ public class CallForwarder extends BroadcastReceiver{
                             new WebApiSender(endpoint, token).send(toSend);
                         }
                     }
-                    // reset the flags anyway
+                    // reset the state anyway
                     callReceived = false;
                     callRinging = false;
+                    number = null;
                 }
             }
         }
@@ -85,13 +83,16 @@ public class CallForwarder extends BroadcastReceiver{
         try {
             Cursor cursor = context.getContentResolver()
                     .query(CallLog.Calls.CONTENT_URI,
-                            null, null, null, CallLog.Calls.DATE + "DESC limit 1;");
+                            null, null, null, CallLog.Calls.DATE + " DESC limit 1;");
             if (cursor.moveToFirst()) {
                 int numberColumnIndex = cursor.getColumnIndex(CallLog.Calls.NUMBER);
-                // this is crap like seen on stackoverflow, but with missed type
-                int typeColumnIndex = cursor.getColumnIndex(String.valueOf(CallLog.Calls.MISSED_TYPE));
+                // see if last call was missed, actual code
+                boolean missed = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE))
+                        == CallLog.Calls.MISSED_TYPE;
                 // there is such index (not sure) and last number matches
-                return (typeColumnIndex != -1) && number.equals(cursor.getString(numberColumnIndex));
+                String lastNumber = cursor.getString(numberColumnIndex);
+                cursor.close();
+                return missed && number.equals(lastNumber);
             }
 
         } catch (SecurityException ex) {

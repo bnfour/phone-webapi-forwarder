@@ -37,7 +37,7 @@
 
         <receiver
             android:name=".CallForwarder"
-            android:permission="android.permission.BROADCAST_SMS"
+            android:permission="android.permission.READ_PHONE_STATE"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
