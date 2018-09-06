@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.CallLog;
+import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -53,7 +54,9 @@ public class CallForwarder extends BroadcastReceiver{
                         // it might be a dismissed call
                         // to know for sure, we need to check call log --
                         // if last call is 'missed' that should be the call that was tracked here
-                        // TODO filtering
+                        if (!FilterHelper.passesFilter(preferences, number)) {
+                            return;
+                        }
                         // slight delay to make sure call log catches up
                         try {
                             Thread.sleep(5000);

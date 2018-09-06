@@ -65,34 +65,8 @@ public class SMSForwarder extends BroadcastReceiver {
 
                     String message = messages.get(sender);
 
-                    boolean filterEnabled = preferences.getBoolean("filter", false);
-
-                    if (filterEnabled) {
-                        String filterType = preferences.getString("filter_type", "0");
-
-                        String[] entriesAsArray = preferences.getString("filter_list", "").split(";");
-
-                        // "0" is blacklist
-                        if (filterType.equals("0")) {
-                            for (String filter : entriesAsArray) {
-                                if (sender.equals(filter) || PhoneNumberUtils.compare(sender, filter)) {
-                                    return;
-                                }
-                            }
-                        }
-                        // "1" (technically, everything that's not "0") is whitelist
-                        else {
-                            boolean found = false;
-                            for (String filter : entriesAsArray) {
-                                if (sender.equals(filter) || PhoneNumberUtils.compare(sender, filter)) {
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (!found) {
-                                return;
-                            }
-                        }
+                    if (!FilterHelper.passesFilter(preferences, sender)) {
+                        return;
                     }
 
                     String template = preferences.getString("sms_template", "%s: %t");
