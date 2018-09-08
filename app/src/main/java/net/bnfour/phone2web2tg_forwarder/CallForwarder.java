@@ -32,10 +32,14 @@ public class CallForwarder extends BroadcastReceiver{
 
             PreferenceCheckHelper checker = new PreferenceCheckHelper(appContext);
 
-            if (!enabled || !checker.isTokenValid(token) || !checker.isEndpointValid(endpoint)) {
-                // TODO notifications on invalid connection settings?
+            if (!enabled) {
                 return;
             }
+            if (!checker.isTokenValid(token) || !checker.isEndpointValid(endpoint)) {
+                Notifier.showNotification(appContext, appContext.getString(R.string.bad_connection_notification));
+                return;
+            }
+
             Bundle bundle = intent.getExtras();
             if (bundle.containsKey(TelephonyManager.EXTRA_STATE)) {
                 String state = bundle.getString(TelephonyManager.EXTRA_STATE);
@@ -70,7 +74,7 @@ public class CallForwarder extends BroadcastReceiver{
                                     "Missed call from %c");
                             String toSend = template.replace("%c", number);
 
-                            new WebApiSender(endpoint, token).send(toSend);
+                            new WebApiSender(appContext, endpoint, token).send(toSend);
                         }
                     }
                     // reset the state anyway

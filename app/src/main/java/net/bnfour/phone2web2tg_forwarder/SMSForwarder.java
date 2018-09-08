@@ -33,8 +33,11 @@ public class SMSForwarder extends BroadcastReceiver {
 
             PreferenceCheckHelper checker = new PreferenceCheckHelper(appContext);
 
-            if (!enabled || !checker.isTokenValid(token) || !checker.isEndpointValid(endpoint)) {
-                // TODO notifications on invalid connection settings?
+            if (!enabled) {
+                return;
+            }
+            if (!checker.isTokenValid(token) || !checker.isEndpointValid(endpoint)) {
+                Notifier.showNotification(appContext, appContext.getString(R.string.bad_connection_notification));
                 return;
             }
 
@@ -72,7 +75,7 @@ public class SMSForwarder extends BroadcastReceiver {
                     String template = preferences.getString("sms_template", "%s: %t");
                     String toSend = template.replace("%s", sender).replace("%t", message);
 
-                    new WebApiSender(endpoint, token).send(toSend);
+                    new WebApiSender(appContext, endpoint, token).send(toSend);
 
                 }
             }

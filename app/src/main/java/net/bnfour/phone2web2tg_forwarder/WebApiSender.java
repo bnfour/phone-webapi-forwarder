@@ -1,5 +1,6 @@
 package net.bnfour.phone2web2tg_forwarder;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -17,13 +18,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class WebApiSender implements Callback<Response> {
 
+    private Context _context;
+
     private String _token;
     private String _endpoint;
 
     private int _retryCount = 0;
     private String _cachedMessage;
 
-    public WebApiSender(String endpoint, String token) {
+    public WebApiSender(Context context, String endpoint, String token) {
+        _context = context;
         _endpoint = endpoint;
         _token = token;
     }
@@ -54,8 +58,9 @@ public class WebApiSender implements Callback<Response> {
         if (response.isSuccessful()) {
             Response result = response.body();
             if (!result.ok) {
-                // TODO notification
-                Log.d("result", "not ok: " + result.details);
+                if (result.code == 1) {
+                    Notifier.showNotification(_context, _context.getString(R.string.no_token_fail));
+                }
                 // retrying on too many messages
                 // enum for states?
                 if (result.code == 2) {
@@ -68,23 +73,17 @@ public class WebApiSender implements Callback<Response> {
                         }
                         send(_cachedMessage);
                     } else {
-                        // notification
+                        Notifier.showNotification(_context, _context.getString(R.string.retries_failed));
                     }
                 }
-            } else {
-                Log.d("result", "ok");
             }
         } else {
-            // TODO notification about failure
-            try {
-                Log.d("result", "not success " + response.errorBody().string());
-            } catch (Exception ex) {}
+            Notifier.showNotification(_context, _context.getString(R.string.another_failure));
         }
     }
 
     @Override
     public void onFailure(Call<Response> call, Throwable t) {
-        // TODO notification
-        Log.d("rip", t.toString());
+        Notifier.showNotification(_context, _context.getString(R.string.another_failure));
     }
 }
