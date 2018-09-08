@@ -31,9 +31,9 @@
     <string name="endpoint_hint_short">URL without trailing \"api\"</string>
     <string name="token_hint_short">Exactly 16 characters long</string>
     <string name="bad_connection_toast">Your connection settings are invalid. App won\'t work until you fix them.</string>
-    <string name="bad_connection_notification">Notification was lost! Please re-check your connection settings.</string>
-    <string name="retries_failed">Notification was not delivered because API bandwidth is exceeded.</string>
-    <string name="no_token_fail">Notification was not delivered: API endpoint does not recognize your token. Please re-check it.</string>
+    <string name="bad_connection_notification">Bad connection settings! Notification was lost.</string>
+    <string name="retries_failed">Bandwidth exceeded! Notification was lost.</string>
+    <string name="no_token_fail">API reports no such token exists! Notification was lost.</string>
     <string name="another_failure">Notification was not delivered! Check your Internet connection and endpoint URL.</string>
     <!-- additional filter text, copied from sms forwarder -->
     <string-array name="filter_types">
