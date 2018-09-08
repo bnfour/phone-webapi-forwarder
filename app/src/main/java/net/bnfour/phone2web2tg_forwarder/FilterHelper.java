@@ -4,34 +4,23 @@ import android.content.SharedPreferences;
 import android.telephony.PhoneNumberUtils;
 
 public class FilterHelper {
+
     public static boolean passesFilter(SharedPreferences preferences, String toCheck) {
 
         boolean filterEnabled = preferences.getBoolean("filter_enabled", false);
-
         if (filterEnabled) {
-            String filterType = preferences.getString("filter_type", "0");
 
+            boolean isBlacklist = preferences.getString("filter_type", "0").equals("0");
             String[] entriesAsArray = preferences.getString("filter_list", "").split(";");
 
-            // "0" is blacklist
-            if (filterType.equals("0")) {
-                for (String filter : entriesAsArray) {
-                    if (toCheck.equals(filter) || PhoneNumberUtils.compare(toCheck, filter)) {
-                        return false;
-                    }
+            for (String filterEntry : entriesAsArray) {
+                // if it's found in the list, the search is over whatever the list type is
+                if (toCheck.equals(filterEntry) || PhoneNumberUtils.compare(toCheck, filterEntry)) {
+                    // blacklist blocks, whitelist lets to pass through
+                    return !isBlacklist;
                 }
-                return true;
-            }
-            // "1" (technically, everything that's not "0") is whitelist
-            else {
-                boolean found = false;
-                for (String filter : entriesAsArray) {
-                    if (toCheck.equals(filter) || PhoneNumberUtils.compare(toCheck, filter)) {
-                        found = true;
-                        break;
-                    }
-                }
-                return found;
+                // if not in list, pass it for blacklist and block for whitelist
+                return isBlacklist;
             }
         }
         // when filter's disabled, everything passes
