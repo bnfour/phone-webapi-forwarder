@@ -11,20 +11,25 @@
     <string name="filter_list_entry_number">Entries: </string>
     <string name="forward_header">Forwarding settings</string>
     <string name="sms_forward_toggle">SMS</string>
-    <string name="sms_template">SMS template</string>
+    <string name="sms_template">SMS notification template</string>
     <string name="call_forward_toggle">Missed calls</string>
-    <string name="call_template">Call template</string>
+    <string name="call_template">Missed call notification template</string>
     <string name="about_header">About</string>
     <string name="app_desc">by bnfour, September 2018</string>
     <string name="oss_title">Open-source! (MIT)</string>
     <string name="oss_desc">Code lives at GitHub</string>
-    <string name="connection_not_set">Not set! Notifications unavailable.</string>
-    <string name="bad_token">This is not a valid token. Please re-check.</string>
+    <string name="connection_not_set">Not set! Notifications unavailable</string>
+    <string name="connection_set_okay">Set. Tap to view/edit</string>
+    <string name="bad_token">Not a valid token. Please re-check</string>
+    <string name="bad_endpoint">Not a valid endpoint address. Please re-check</string>
     <string name="sms_template_hint">%s for sender, %t for message text</string>
     <string name="calls_template_hint">%c for caller ID</string>
     <string name="sms_template_default">%s:\n%t</string>
     <string name="calls_template_default">Missed call from %c</string>
     <string name="token_regex">[0-9a-zA-Z+=]{16}</string>
+    <string name="endpoint_hint">URL as given by bot via /token command, but without the last \"api\" part for technical reasons. Should end with slash though.</string>
+    <string name="endpoint_hint_short">URL without trailing \"api\"</string>
+    <string name="token_hint_short">Exactly 16 characters long</string>
     <!-- additional filter text, copied from sms forwarder -->
     <string-array name="filter_types">
         <item>Blacklist</item>

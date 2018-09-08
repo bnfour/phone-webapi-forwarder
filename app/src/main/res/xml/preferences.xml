@@ -4,10 +4,13 @@
         android:title="@string/connection_header">
         <EditTextPreference
             android:key="api_endpoint_url"
-            android:title="@string/endpoint_title"/>
+            android:title="@string/endpoint_title"
+            android:dialogMessage="@string/endpoint_hint"
+            android:hint="@string/endpoint_hint_short"/>
         <EditTextPreference
             android:key="api_token"
-            android:title="@string/token_title"/>
+            android:title="@string/token_title"
+            android:hint="@string/token_hint_short"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/filter_header">
