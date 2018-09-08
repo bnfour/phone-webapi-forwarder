@@ -1,5 +1,6 @@
 package net.bnfour.phone2web2tg_forwarder;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -17,30 +18,15 @@ public class SettingsFragment extends PreferenceFragment
     private static List<String> keysDependentOnConnection = new ArrayList<>(
             Arrays.asList("filter_enabled", "sms_enabled", "calls_enabled")
     );
+    // only used to instantiate PreferenceCheckHelper and Toast
+    private Context _context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final Pattern _tokenRegex = Pattern.compile(getString(R.string.token_regex));
-
+        _context = getActivity().getApplicationContext();
         addPreferencesFromResource(R.xml.preferences);
         updateAll();
-
-        // checks token against regex and warns user if it's not a token
-        Preference tokenPreference = findPreference("api_token");
-        tokenPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                if (!_tokenRegex.matcher(o.toString()).matches()) {
-                    Toast.makeText(getActivity(), getString(R.string.bad_token), Toast.LENGTH_SHORT)
-                            .show();
-                }
-                // store it anyway so user can edit it
-                return true;
-            }
-        });
-
     }
 
     @Override
@@ -67,24 +53,59 @@ public class SettingsFragment extends PreferenceFragment
         updateAll();
     }
 
-    // also updates summaries
     // i'm bad at computer programming
-    private boolean isSetToValue(String key) {
+
+    // true when token is ok, also sets summary
+    private boolean updateToken() {
+        final String key = "api_token";
+        String token = getPreferenceManager().getSharedPreferences().getString(key, "");
         Preference p = findPreference(key);
-        String value = getPreferenceManager().getSharedPreferences().getString(key, "");
-        boolean valid = !value.equals("");
-        p.setSummary(valid ? value : getString(R.string.connection_not_set));
-        return valid;
+        PreferenceCheckHelper helper = new PreferenceCheckHelper(_context);
+
+        if (token.equals("")) {
+            p.setSummary(R.string.connection_not_set);
+            return false;
+        } else if (!helper.isTokenValid(token)) {
+            p.setSummary(R.string.bad_token);
+            return false;
+        } else {
+            p.setSummary(R.string.connection_set_okay);
+            return true;
+        }
+    }
+
+    // true when endpoint is 'ok', also sets summary
+    private boolean updateEndpoint() {
+        final String key = "api_endpoint_url";
+        String endpoint = getPreferenceManager().getSharedPreferences().getString(key, "");
+        Preference p = findPreference(key);
+        PreferenceCheckHelper helper = new PreferenceCheckHelper(_context);
+
+        if (endpoint.equals("")) {
+            p.setSummary(R.string.connection_not_set);
+            return false;
+        } else if (!helper.isEndpointValid(endpoint)) {
+            p.setSummary(R.string.bad_endpoint);
+            return false;
+        } else {
+            p.setSummary(R.string.connection_set_okay);
+            return true;
+        }
     }
 
     private void updateConnectionAndDependent() {
-        boolean valid = isSetToValue("api_token") & isSetToValue("api_endpoint_url");
+        // &, not &&, since we have side effects
+        boolean valid = updateToken() & updateEndpoint();
+
+        if (!valid) {
+            Toast.makeText(_context, getString(R.string.bad_connection_toast), Toast.LENGTH_LONG).show();
+        }
+
         for (String depKey: keysDependentOnConnection) {
             Preference p = findPreference(depKey);
             p.setEnabled(valid);
         }
     }
-
 
     private void updateAll() {
         updateConnectionAndDependent();

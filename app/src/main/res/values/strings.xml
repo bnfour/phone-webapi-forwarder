@@ -30,6 +30,7 @@
     <string name="endpoint_hint">URL as given by bot via /token command, but without the last \"api\" part for technical reasons. Should end with slash though.</string>
     <string name="endpoint_hint_short">URL without trailing \"api\"</string>
     <string name="token_hint_short">Exactly 16 characters long</string>
+    <string name="bad_connection_toast">Your connection settings are invalid. App won\'t work until you fix them.</string>
     <!-- additional filter text, copied from sms forwarder -->
     <string-array name="filter_types">
         <item>Blacklist</item>
