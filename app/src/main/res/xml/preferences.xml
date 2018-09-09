@@ -63,7 +63,9 @@
         <Preference
             android:title="@string/oss_title"
             android:summary="@string/oss_desc">
-            <!-- TODO intent -->
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/bnfour/phone-webapi-forwarder"/>
         </Preference>
         <Preference
             android:key="3rd_party"
