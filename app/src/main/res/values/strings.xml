@@ -35,6 +35,24 @@
     <string name="retries_failed">Bandwidth exceeded! Notification was lost.</string>
     <string name="no_token_fail">API reports no such token exists! Notification was lost.</string>
     <string name="another_failure">Notification was not delivered! Check your Internet connection and endpoint URL.</string>
+    <string name="third_party_title">Third-party licenses</string>
+    <string name="third_party_long">This project utilises the following libraries:\n\n
+- Retrofit by Square, Inc.\n
+- GSON by Google Inc.\n
+- Android Support Library by The Android Open Source Project.\n\n
+All available under Apache 2.0 license:\n\n
+Licensed under the Apache License, Version 2.0 (the "License");\n
+you may not use this file except in compliance with the License.\n
+You may obtain a copy of the License at\n
+\n
+    http://www.apache.org/licenses/LICENSE-2.0\n
+\n
+Unless required by applicable law or agreed to in writing, software\n
+distributed under the License is distributed on an "AS IS" BASIS,\n
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
+See the License for the specific language governing permissions and\n
+limitations under the License.
+    </string>
     <!-- additional filter text, copied from sms forwarder -->
     <string-array name="filter_types">
         <item>Blacklist</item>

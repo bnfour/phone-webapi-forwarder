@@ -65,6 +65,9 @@
             android:summary="@string/oss_desc">
             <!-- TODO intent -->
         </Preference>
+        <Preference
+            android:key="3rd_party"
+            android:title="@string/third_party_title"/>
         <!-- TODO icon credits after actual icon -->
     </PreferenceCategory>
 </PreferenceScreen>

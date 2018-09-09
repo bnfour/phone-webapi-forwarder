@@ -1,10 +1,14 @@
 package net.bnfour.phone2web2tg_forwarder;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.content.SharedPreferences;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,9 +28,32 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        _context = getActivity().getApplicationContext();
+
+        _context = getActivity();//.getApplicationContext();
         addPreferencesFromResource(R.xml.preferences);
         updateAll();
+
+        Preference thirdParty = findPreference("3rd_party");
+        thirdParty.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(_context)
+                        .setTitle(R.string.third_party_title)
+                        .setMessage(R.string.third_party_long)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                Dialog dialog = dialogBuilder.show();
+                TextView messageView = (TextView)dialog.findViewById(android.R.id.message);
+                messageView.setTextSize(12);
+                return true;
+            }
+        });
+
     }
 
     @Override
