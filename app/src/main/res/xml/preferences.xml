@@ -68,6 +68,12 @@
         <Preference
             android:key="3rd_party"
             android:title="@string/third_party_title"/>
-        <!-- TODO icon credits after actual icon -->
+        <Preference
+            android:title="@string/icon_title"
+            android:summary="@string/icon_desc">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://www.icojam.com/blog/?p=253"/>
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>
